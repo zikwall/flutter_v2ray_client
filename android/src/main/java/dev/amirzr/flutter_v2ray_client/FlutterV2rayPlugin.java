@@ -149,6 +149,13 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
                         return;
                     }
 
+                    // Prevent concurrent permission requests which can lead to a null pendingResult when the
+                    // activity result returns after a lifecycle change or a second request
+                    if (pendingResult != null) {
+                        result.error("ALREADY_ACTIVE", "A permission request is already running", null);
+                        return;
+                    }
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         if (ActivityCompat.checkSelfPermission(activity,
                                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -237,19 +244,28 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
 
     @Override
     public void onDetachedFromActivity() {
-        // No additional cleanup required
+        // Clear activity and fail any pending permission result to avoid NPEs
+        activity = null;
+        if (pendingResult != null) {
+            pendingResult.error("ACTIVITY_DETACHED", "Activity detached before receiving VPN permission result", null);
+            pendingResult = null;
+        }
     }
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE_VPN_PERMISSION) {
-            if (resultCode == Activity.RESULT_OK) {
-                pendingResult.success(true);
-            } else {
-                pendingResult.success(false);
-            }
-            pendingResult = null;
+        if (requestCode != REQUEST_CODE_VPN_PERMISSION) {
+            return false; // Not handled by this plugin
         }
+
+        MethodChannel.Result result = pendingResult;
+        pendingResult = null;
+
+        if (result == null) {
+            return false; // Nothing to report (possibly after lifecycle change)
+        }
+
+        result.success(resultCode == Activity.RESULT_OK);
         return true;
     }
 }
