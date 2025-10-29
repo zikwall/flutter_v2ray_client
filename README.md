@@ -22,6 +22,7 @@
       - [Making V2Ray connection](#making-v2ray-connection)
       - [Exclude specific apps from VPN (blockedApps)](#exclude-specific-apps-from-vpn-blockedapps)
       - [Bypass LAN Traffic](#bypass-lan-traffic)
+      - [View and manage V2Ray logs (Android)](#view-and-manage-v2ray-logs-android)
   - [🤖 Android configuration before publish to Google Play🚀](#-android-configuration-before-publish-to-google-play)
     - [Android 16 KB Page Size Support](#android-16-kb-page-size-support)
     - [gradle.properties](#gradleproperties)
@@ -44,9 +45,9 @@
 
 ## 📸 Screenshots
 
-| Main Screen |
-|-------------|
-|<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/main_screen.png" alt="Main Screen" width="300"/>|
+| Main Screen | Logs Screen |
+|-------------|---------------|
+|<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-1.png" alt="Main Screen" width="300"/>|<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-2.png" alt="Second Screen" width="300"/>|
 
 *Example app demonstrating flutter_v2ray_client features*
 
@@ -238,6 +239,31 @@ v2ray.startV2Ray(
 ```
 
 <br>
+
+#### View and manage V2Ray logs (Android)
+```dart
+import 'package:flutter_v2ray_client/flutter_v2ray.dart';
+
+final v2ray = V2ray(onStatusChanged: (_) {});
+
+// Fetch logs from Android logcat (oldest -> newest)
+final List<String> logs = await v2ray.getLogs();
+
+// Clear logcat buffer (Android only)
+final bool cleared = await v2ray.clearLogs();
+```
+
+Notes:
+- **Android only**. Other platforms return empty results / true on clear.
+- Logs are returned in chronological order (oldest → newest).
+- Internally, the plugin keeps a small in-memory buffer capped at ~500 lines for low memory usage.
+- The example app includes a "View Logs" page with:
+  - **Search/filter** text box
+  - **Copy** button that copies currently filtered logs and prefixes type: [ERROR], [WARN], [INFO]
+  - **Refresh** to re-fetch from logcat
+  - **Clear** to clear logcat
+  - Automatic scroll to bottom on refresh and search
+  - Bottom-only safe area padding so content stays above navigation gestures
 
 ## 🤖 Android configuration before publish to Google Play🚀
 

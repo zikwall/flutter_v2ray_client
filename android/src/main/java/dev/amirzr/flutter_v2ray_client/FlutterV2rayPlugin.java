@@ -19,7 +19,9 @@ import androidx.core.app.ActivityCompat;
 import dev.amirzr.flutter_v2ray_client.v2ray.V2rayController;
 import dev.amirzr.flutter_v2ray_client.v2ray.V2rayReceiver;
 import dev.amirzr.flutter_v2ray_client.v2ray.utils.AppConfigs;
+import dev.amirzr.flutter_v2ray_client.v2ray.utils.LogcatManager;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -178,6 +180,29 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
                     } else {
                         result.success(true);
                     }
+                    break;
+                case "getLogs":
+                    executor.submit(() -> {
+                        try {
+                            String packageName = binding.getApplicationContext().getPackageName();
+                            List<String> logs = LogcatManager.getInstance().getLogs(packageName);
+                            result.success(logs);
+                        } catch (Exception e) {
+                            Log.e("FlutterV2rayPlugin", "Failed to get logs", e);
+                            result.error("LOG_ERROR", "Failed to retrieve logs: " + e.getMessage(), null);
+                        }
+                    });
+                    break;
+                case "clearLogs":
+                    executor.submit(() -> {
+                        try {
+                            boolean success = LogcatManager.getInstance().clearLogs();
+                            result.success(success);
+                        } catch (Exception e) {
+                            Log.e("FlutterV2rayPlugin", "Failed to clear logs", e);
+                            result.error("LOG_ERROR", "Failed to clear logs: " + e.getMessage(), null);
+                        }
+                    });
                     break;
                 default:
                     break;

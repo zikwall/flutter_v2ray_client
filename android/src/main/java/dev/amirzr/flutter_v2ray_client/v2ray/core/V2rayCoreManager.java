@@ -100,8 +100,6 @@ public final class V2rayCoreManager {
                 } catch (Exception e) {
                     Log.w("V2rayCoreManager", "Failed to send connection info broadcast", e);
                 }
-
-                Log.d(V2rayCoreManager.class.getSimpleName(), "makeDurationTimer => " + SERVICE_DURATION);
             }
 
             public void onFinish() {
@@ -232,7 +230,7 @@ public final class V2rayCoreManager {
         } catch (Exception e) {
             Log.w("V2rayCoreManager", "Failed to cancel notification", e);
         }
-        
+
         try {
             if (isV2rayCoreRunning()) {
                 if (coreController != null) {
@@ -355,7 +353,8 @@ public final class V2rayCoreManager {
 
         try {
             // Build the notification
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, notificationChannelID)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,
+                    notificationChannelID)
                     .setSmallIcon(v2rayConfig.APPLICATION_ICON)
                     .setContentTitle(v2rayConfig.REMARK)
                     .addAction(0, v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME, notificationContentPendingIntent)
