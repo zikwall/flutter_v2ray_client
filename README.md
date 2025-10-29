@@ -56,7 +56,7 @@
 ## 📱 Supported Platforms
 | Platform  | Status    | Info |
 | --------- | --------- | ---- |
-| Android   | Done ✅   | Xray 25.9.11 |
+| Android   | Done ✅   | Xray 25.10.15 |
 | iOS       | Coming Soon | Support via [Donations](#donation) |
 | Windows   | Coming Soon | Support via [Donations](#donation) |
 | Linux     | Coming Soon | Support via [Donations](#donation) |
