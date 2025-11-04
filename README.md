@@ -9,23 +9,28 @@
 ![](https://img.shields.io/github/issues/amir-zr/flutter_v2ray_client)
 
 > [!TIP]
-> ## 🚀 Windows Version Coming Soon - Pre-order Now!
-> 
-> **📅 Release Date:** November 13, 2025
-> **🎁 Special Offer:** 30% Discount for Pre-orders!
-> 
-> ### 🌟 Why Upgrade to Premium Windows Version?
-> 
-> - 🛡️ **Lifetime Guarantee** - One-time payment, free updates forever
-> - 💬 **Priority Support** - Dedicated support for all premium users
-> - 🔥 **Advanced Features** - Access to exclusive premium features
-> 
-> [👉 **Pre-order Now on Telegram**](https://t.me/AmirZrDevv)
+> ### 🚀 Now Available on Windows, macOS, and Linux!
+> ### 📱 iOS Version - Coming November 15
+>
+> [<img src="https://img.shields.io/badge/📸_Screenshots-6e5494?style=for-the-badge" height="40">](#-screenshots) [<img src="https://img.shields.io/badge/📱_Platforms-6e5494?style=for-the-badge" height="40">](#-supported-platforms)
 
----
+## ✨ Premium Features
+
+> **🔒 2-Year Guarantee**  
+> Free updates & maintenance included
+
+> **💎 Priority Support**  
+> Direct, fast help for all premium users
+
+> **🚀 Advanced Features**  
+> Unlock exclusive premium capabilities
+
+> 💡 **Need help or have questions?** We're here to help! [Contact us](https://t.me/AmirZrDevv) for quick assistance or to discuss your needs.
+
 
 ## Table of contents
 - [flutter\_v2ray\_client](#flutter_v2ray_client)
+  - [✨ Premium Features](#-premium-features)
   - [Table of contents](#table-of-contents)
   - [⚡ Features](#-features)
   - [📸 Screenshots](#-screenshots)
@@ -61,11 +66,17 @@
 
 ## 📸 Screenshots
 
-| Main Screen | Logs Screen |
-|-------------|---------------|
-|<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-1.png" alt="Main Screen" width="300"/>|<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-2.png" alt="Second Screen" width="300"/>|
+| Android |
+|---------|
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-1.png" alt="Android Main Screen" width="300"/>&nbsp;&nbsp;&nbsp;<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-2.png" alt="Android Logs Screen" width="300"/> |
+| **Windows** |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-windows.png" alt="Windows" width="600"/> |
+| **macOS** |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-macos.png" alt="macOS" width="600"/> |
+| **Linux** |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-linux.png" alt="Linux" width="600"/> |
 
-*Example app demonstrating flutter_v2ray_client features*
+*Example app demonstrating flutter_v2ray_client features across multiple platforms*
 
 <br>
 
@@ -73,13 +84,11 @@
 | Platform  | Status    | Info | Type |
 | --------- | --------- | ---- | ---- |
 | Android   | Done ✅   | Xray 25.10.15 | Free |
-| Windows   | Releasing Nov 13, 2025 | [Pre-Order with 30% discount](https://t.me/AmirZrDevv) | Premium |
-| Linux     | Coming Soon | Contact on [Telegram](https://t.me/AmirZrDevv) for updates | Premium |
-| iOS       | Coming Soon | Contact on [Telegram](https://t.me/AmirZrDevv) for updates | Premium |
-| macOS     | Coming Soon | Contact on [Telegram](https://t.me/AmirZrDevv) for updates | Premium |
+| Windows   | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
+| Linux     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
+| macOS     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
+| iOS       | Releasing Nov 15 | [Pre Order](https://t.me/AmirZrDevv) | Premium |
 | Browser Extension | Coming Soon | Chrome, Firefox, Edge | Premium |
-
-*Note: Windows version will be released by November 13, 2025. Limited-time 30% discount for pre-orders. Contact us on [Telegram](https://t.me/AmirZrDevv) for more details.*
 
 <br>
 
