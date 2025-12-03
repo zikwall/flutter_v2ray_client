@@ -87,8 +87,8 @@
 ## 📱 Supported Platforms
 | Platform  | Status    | Info | Type |
 | --------- | --------- | ---- | ---- |
-| Android   | Done ✅   | Xray 25.10.15 | Free |
-| iOS       | Done ✅ | Xray 25.10.15 <br/> HevSocks5Tunnel 5.14.1 | [Buy Now](https://t.me/AmirZrDevv) |
+| Android   | Done ✅   | Xray 25.12.2 | Free |
+| iOS       | Done ✅ | Xray 25.12.2 <br/> HevSocks5Tunnel 5.14.1 | [Buy Now](https://t.me/AmirZrDevv) |
 | Windows   | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
 | Linux     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
 | macOS     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
@@ -296,6 +296,9 @@ Notes:
   - Bottom-only safe area padding so content stays above navigation gestures
 
 ## 🤖 Android configuration before publish to Google Play🚀
+
+> **ℹ️ OpenVPN Compatibility**  
+> There are no conflicts with `openvpn_flutter` and you can use both packages together in the same application. This allows you to provide both V2Ray and OpenVPN connectivity options in your app.
 
 ### Android 16 KB Page Size Support
 This package fully supports Android's 16 KB page size, ensuring compatibility with the latest Android devices and requirements for Google Play Store publishing. The plugin is built with modern Android development practices that handle both 4 KB and 16 KB page sizes seamlessly.
