@@ -17,7 +17,7 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
     @Override
     public void onCreate() {
         super.onCreate();
-        V2rayCoreManager.getInstance().setUpListener(this);
+        V2rayCoreManager.getInstance().attachService(this);
     }
 
     @Override
@@ -57,6 +57,12 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
             }
             if (!V2rayCoreManager.getInstance().showNotification(v2rayConfig)) {
                 Log.e("V2rayProxyOnlyService", "Failed to promote proxy service to foreground");
+                V2rayCoreManager.getInstance().stopCore();
+                stopSelf(startId);
+                return START_NOT_STICKY;
+            }
+            if (!V2rayCoreManager.getInstance().ensureCoreInitialized(this)) {
+                Log.e("V2rayProxyOnlyService", "Failed to initialize v2ray core");
                 V2rayCoreManager.getInstance().stopCore();
                 stopSelf(startId);
                 return START_NOT_STICKY;

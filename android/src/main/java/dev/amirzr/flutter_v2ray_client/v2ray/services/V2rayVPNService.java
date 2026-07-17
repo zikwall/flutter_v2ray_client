@@ -33,7 +33,7 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
     @Override
     public void onCreate() {
         super.onCreate();
-        V2rayCoreManager.getInstance().setUpListener(this);
+        V2rayCoreManager.getInstance().attachService(this);
     }
 
     @Override
@@ -73,6 +73,11 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
             }
             if (!V2rayCoreManager.getInstance().showNotification(v2rayConfig)) {
                 Log.e("V2rayVPNService", "Failed to promote VPN service to foreground");
+                stopAllProcess();
+                return START_NOT_STICKY;
+            }
+            if (!V2rayCoreManager.getInstance().ensureCoreInitialized(this)) {
+                Log.e("V2rayVPNService", "Failed to initialize v2ray core");
                 stopAllProcess();
                 return START_NOT_STICKY;
             }

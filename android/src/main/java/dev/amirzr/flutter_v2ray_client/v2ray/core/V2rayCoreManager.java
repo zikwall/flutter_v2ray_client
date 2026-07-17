@@ -107,9 +107,25 @@ public final class V2rayCoreManager {
         }.start();
     }
 
-    public void setUpListener(Service targetService) {
+    public void attachService(Service targetService) {
         try {
             v2rayServicesListener = (V2rayServicesListener) targetService;
+        } catch (Exception e) {
+            Log.e(V2rayCoreManager.class.getSimpleName(), "attachService failed => ", e);
+        }
+    }
+
+    public boolean setUpListener(Service targetService) {
+        return ensureCoreInitialized(targetService);
+    }
+
+    public synchronized boolean ensureCoreInitialized(Service targetService) {
+        try {
+            attachService(targetService);
+            if (isLibV2rayCoreInitialized && coreController != null) {
+                return true;
+            }
+
             Libv2ray.initCoreEnv(getUserAssetsPath(targetService.getApplicationContext()), "");
 
             // Register Android VPN socket protector with libv2ray (Go)
@@ -171,9 +187,12 @@ public final class V2rayCoreManager {
             totalUpload = 0;
             Log.e(V2rayCoreManager.class.getSimpleName(), "setUpListener => new initialize from "
                     + v2rayServicesListener.getService().getClass().getSimpleName());
+            return true;
         } catch (Exception e) {
             Log.e(V2rayCoreManager.class.getSimpleName(), "setUpListener failed => ", e);
             isLibV2rayCoreInitialized = false;
+            coreController = null;
+            return false;
         }
     }
 
@@ -322,12 +341,6 @@ public final class V2rayCoreManager {
 
         try {
             String appName = AppConfigs.APPLICATION_NAME;
-            if (appName == null || appName.isEmpty()) {
-                CharSequence label = context.getApplicationInfo().loadLabel(context.getPackageManager());
-                if (label != null) {
-                    appName = label.toString();
-                }
-            }
             if (appName == null || appName.isEmpty()) {
                 appName = "VPN";
             }
