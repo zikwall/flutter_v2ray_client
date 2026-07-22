@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -369,7 +370,7 @@ public final class V2rayCoreManager {
                     .setSound(null)
                     .setVibrate(null);
 
-            context.startForeground(NOTIFICATION_ID, notificationBuilder.build());
+            startForegroundVpn(context, NOTIFICATION_ID, notificationBuilder.build());
             Log.i("V2rayCoreManager", "Startup foreground service notification shown");
             return true;
         } catch (SecurityException se) {
@@ -456,7 +457,7 @@ public final class V2rayCoreManager {
 
             // CRITICAL: VPN services MUST call startForeground
             try {
-                context.startForeground(NOTIFICATION_ID, notificationBuilder.build());
+                startForegroundVpn(context, NOTIFICATION_ID, notificationBuilder.build());
                 Log.i("V2rayCoreManager", "Foreground service started successfully");
                 return true;
             } catch (SecurityException se) {
@@ -474,6 +475,17 @@ public final class V2rayCoreManager {
             Log.e("V2rayCoreManager", "Error building notification", e);
             return false;
         }
+    }
+
+    private void startForegroundVpn(Service context, int notificationId, Notification notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            context.startForeground(
+                    notificationId,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+            return;
+        }
+        context.startForeground(notificationId, notification);
     }
 
     public boolean isV2rayCoreRunning() {
