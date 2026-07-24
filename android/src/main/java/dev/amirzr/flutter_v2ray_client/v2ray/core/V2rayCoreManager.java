@@ -351,10 +351,7 @@ public final class V2rayCoreManager {
                 title = appName;
             }
 
-            int icon = AppConfigs.APPLICATION_ICON;
-            if (icon == 0) {
-                icon = android.R.drawable.stat_sys_warning;
-            }
+            int icon = resolveNotificationIcon(context, null);
 
             String notificationChannelID = createNotificationChannelID(appName);
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,
@@ -431,9 +428,11 @@ public final class V2rayCoreManager {
                     context, 0, stopIntent, flags);
 
             // Create minimal, silent notification
+            int icon = resolveNotificationIcon(context, v2rayConfig);
+
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,
                     notificationChannelID)
-                    .setSmallIcon(v2rayConfig.APPLICATION_ICON)
+                    .setSmallIcon(icon)
                     .setContentTitle(v2rayConfig.REMARK)
                     .setContentText("") // Minimal text
                     .setPriority(NotificationCompat.PRIORITY_LOW) // Low priority
@@ -451,7 +450,7 @@ public final class V2rayCoreManager {
             // Only add action button if we have the text for it
             if (v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME != null &&
                     !v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME.isEmpty()) {
-                notificationBuilder.addAction(0, v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME,
+                notificationBuilder.addAction(icon, v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME,
                         pendingIntent);
             }
 
@@ -475,6 +474,23 @@ public final class V2rayCoreManager {
             Log.e("V2rayCoreManager", "Error building notification", e);
             return false;
         }
+    }
+
+    private int resolveNotificationIcon(Service context, V2rayConfig v2rayConfig) {
+        int icon = 0;
+        if (v2rayConfig != null) {
+            icon = v2rayConfig.APPLICATION_ICON;
+        }
+        if (icon == 0) {
+            icon = AppConfigs.APPLICATION_ICON;
+        }
+        if (icon == 0 && context != null && context.getApplicationInfo() != null) {
+            icon = context.getApplicationInfo().icon;
+        }
+        if (icon == 0) {
+            icon = android.R.drawable.stat_sys_warning;
+        }
+        return icon;
     }
 
     private void startForegroundVpn(Service context, int notificationId, Notification notification) {

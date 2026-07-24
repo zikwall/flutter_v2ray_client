@@ -118,9 +118,16 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
                 case "initializeV2Ray":
                     String iconResourceName = call.argument("notificationIconResourceName");
                     String iconResourceType = call.argument("notificationIconResourceType");
+                    int iconResourceId = binding.getApplicationContext().getResources().getIdentifier(iconResourceName,
+                            iconResourceType, binding.getApplicationContext().getPackageName());
+                    if (iconResourceId == 0) {
+                        iconResourceId = binding.getApplicationContext().getApplicationInfo().icon;
+                    }
+                    if (iconResourceId == 0) {
+                        iconResourceId = android.R.drawable.stat_sys_warning;
+                    }
                     V2rayController.init(binding.getApplicationContext(),
-                            binding.getApplicationContext().getResources().getIdentifier(iconResourceName,
-                                    iconResourceType, binding.getApplicationContext().getPackageName()),
+                            iconResourceId,
                             "Flutter V2ray");
                     result.success(null);
                     break;
