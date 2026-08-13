@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **Android VPN startup**: wait up to five seconds with capped backoff for the
+  tun2socks control socket before handing off the VPN file descriptor. Failed
+  handoff now closes retry sockets and stops the VPN instead of leaving a
+  connected-looking tunnel without traffic.
+
 ## [3.4.0]
 
 ### Added
