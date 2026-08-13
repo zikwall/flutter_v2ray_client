@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
     private ParcelFileDescriptor mInterface;
     private Process process;
     private V2rayConfig v2rayConfig;
-    private boolean isRunning = true;
+    private volatile boolean isRunning = true;
 
     @Override
     public void onCreate() {
@@ -257,31 +258,73 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
         String localSocksFile = new File(getApplicationContext().getFilesDir(), "sock_path").getAbsolutePath();
         FileDescriptor tunFd = mInterface.getFileDescriptor();
         new Thread(() -> {
-            int tries = 0;
-            while (true) {
+            long startedAtNanos = System.nanoTime();
+            int failedAttempts = 0;
+            Exception lastError = null;
+            while (isRunning) {
+                long remainingMillis = TunFdRetryPolicy.remainingMillis(
+                        startedAtNanos,
+                        System.nanoTime());
+                if (remainingMillis <= 0L) {
+                    break;
+                }
+
+                long retryDelayMillis = Math.min(
+                        TunFdRetryPolicy.retryDelayMillis(failedAttempts),
+                        remainingMillis);
+                if (retryDelayMillis > 0L) {
+                    try {
+                        Thread.sleep(retryDelayMillis);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+                if (!isRunning || TunFdRetryPolicy.remainingMillis(
+                        startedAtNanos,
+                        System.nanoTime()) <= 0L) {
+                    break;
+                }
+
+                LocalSocket clientLocalSocket = new LocalSocket();
                 try {
-                    Thread.sleep(50L * tries);
-                    LocalSocket clientLocalSocket = new LocalSocket();
                     clientLocalSocket
                             .connect(new LocalSocketAddress(localSocksFile, LocalSocketAddress.Namespace.FILESYSTEM));
                     if (!clientLocalSocket.isConnected()) {
-                        Log.e("SOCK_FILE", "Unable to connect to localSocksFile [" + localSocksFile + "]");
-                    } else {
-                        Log.e("SOCK_FILE", "connected to sock file [" + localSocksFile + "]");
+                        throw new IOException("tun2socks control socket is not connected");
                     }
                     OutputStream clientOutStream = clientLocalSocket.getOutputStream();
                     clientLocalSocket.setFileDescriptorsForSend(new FileDescriptor[] { tunFd });
                     clientOutStream.write(32);
-                    clientLocalSocket.setFileDescriptorsForSend(null);
-                    clientLocalSocket.shutdownOutput();
-                    clientLocalSocket.close();
-                    break;
+                    Log.i(
+                            "SOCK_FILE",
+                            "Sent VPN file descriptor after " + failedAttempts + " failed attempt(s)");
+                    return;
                 } catch (Exception e) {
-                    Log.e(V2rayVPNService.class.getSimpleName(), "sendFd failed =>", e);
-                    if (tries > 5)
-                        break;
-                    tries += 1;
+                    lastError = e;
+                    failedAttempts += 1;
+                    Log.w(
+                            V2rayVPNService.class.getSimpleName(),
+                            "VPN file descriptor handoff not ready; retrying (attempt "
+                                    + failedAttempts + ")");
+                } finally {
+                    try {
+                        clientLocalSocket.setFileDescriptorsForSend(null);
+                    } catch (Exception ignored) {
+                    }
+                    try {
+                        clientLocalSocket.close();
+                    } catch (Exception ignored) {
+                    }
                 }
+            }
+
+            if (isRunning) {
+                Log.e(
+                        V2rayVPNService.class.getSimpleName(),
+                        "VPN file descriptor handoff timed out after " + failedAttempts + " attempt(s)",
+                        lastError);
+                stopAllProcess();
             }
         }, "sendFd_Thread").start();
     }
